@@ -17,7 +17,11 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
     "concurrently": "^8.2.2",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.6"
   }
 }

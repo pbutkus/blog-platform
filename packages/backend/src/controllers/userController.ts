@@ -5,10 +5,10 @@ import { signToken } from "../utils/jwt";
 const maxAge = 3 * 24 * 60 * 60;
 
 const signupPost = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { username, email, password } = req.body;
 
   try {
-    const user = await User.create({ email, password });
+    const user = await User.create({ username, email, password });
     const token = signToken(user._id as string);
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge * 1000 });
     res.status(201).json(user);

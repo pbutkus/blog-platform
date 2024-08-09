@@ -2,7 +2,8 @@ import mongoose, { Document, Model } from "mongoose";
 import { isEmail } from "validator";
 import bcrypt from "bcrypt";
 
-interface IUser extends Document {
+export interface IUser extends Document {
+  username: string;
   email: string;
   password: string;
 }
@@ -12,6 +13,12 @@ interface IUserModel extends Model<IUser> {
 }
 
 const userSchema = new mongoose.Schema<IUser>({
+  username: {
+    type: String,
+    required: [true, "Please enter a username"],
+    unique: true,
+    minlength: [6, "Minimum username length is 6 characters"],
+  },
   email: {
     type: String,
     required: [true, "Please enter an email"],
@@ -39,13 +46,20 @@ userSchema.statics.login = async function (email: string, password: string) {
     if (auth) {
       return user;
     }
-
     throw Error("Incorrect password");
   }
-
   throw Error("Incorrect email");
 };
 
-const User = mongoose.model<IUser, IUserModel>("user", userSchema);
+userSchema.set("toJSON", {
+  transform: (document, returnedObject) => {
+    returnedObject.id = returnedObject._id.toString();
+    delete returnedObject._id;
+    delete returnedObject.__v;
+    delete returnedObject.password;
+  },
+});
+
+const User = mongoose.model<IUser, IUserModel>("User", userSchema);
 
 export default User;

@@ -1,31 +1,38 @@
 import mongoose, { Document } from "mongoose";
+import { IUser } from "./User";
 
-interface IPost extends Document {
+export interface IPost extends Document {
   title: string;
   headerImg: string;
   body: string;
-  author: string;
+  created_at: Date;
+  author: IUser["_id"];
 }
 
 const postSchema = new mongoose.Schema({
-  author: {
-    ref: "User",
-    type: mongoose.Schema.Types.ObjectId,
-  },
   title: {
     type: String,
     required: [true, "Please enter title"],
   },
   headerImg: {
     type: String,
-    required: [true, "Please enter header image url"],
+    required: [true, "Please enter header image URL"],
   },
   body: {
     type: String,
     required: [true, "Please enter body content"],
   },
+  created_at: {
+    type: Date,
+    default: Date.now,
+  },
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 });
 
-const Post = mongoose.model<IPost & Document>("Post", postSchema);
+const Post = mongoose.model<IPost>("Post", postSchema);
 
 export default Post;
